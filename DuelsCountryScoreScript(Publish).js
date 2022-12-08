@@ -1366,8 +1366,8 @@
 
 
         //Add Everything To The Page
-        let referenceNode = document.getElementsByClassName('version3_main__xNkED')[0];
-        let siblingNode = document.getElementsByClassName('footer_footer__NmtmJ')[0];
+        let referenceNode = document.getElementsByClassName('version4_main__DAsSW')[0];
+        let siblingNode = document.getElementsByClassName('version4_notificationPreviewList__OOMPZ')[0];
 
         referenceNode.parentNode.insertBefore(htmlForUpdate, siblingNode);
 
@@ -1491,8 +1491,8 @@
 
 
         //Add Everything To The Page
-        let referenceNode = document.getElementsByClassName('version3_main__xNkED')[0];
-        let siblingNode = document.getElementsByClassName('footer_footer__NmtmJ')[0];
+        let referenceNode = document.getElementsByClassName('version4_main__DAsSW')[0];
+        let siblingNode = document.getElementsByClassName('version4_notificationPreviewList__OOMPZ')[0];
 
         referenceNode.parentNode.insertBefore(htmlForSetup, siblingNode);
 
@@ -1518,6 +1518,7 @@
         cssForMap.textContent = `
             .map-wrapper-element{
                 position: relative;
+                padding-bottom: 10px;
                 left: 0px;
             }
     
@@ -5159,8 +5160,8 @@
 
         }`;
     
-        let referenceNode = document.getElementsByClassName('version3_main__xNkED')[0];
-        let siblingNode = document.getElementsByClassName('footer_footer__NmtmJ')[0];
+        let referenceNode = document.getElementsByClassName('version4_main__DAsSW')[0];
+        let siblingNode = document.getElementsByClassName('version4_notificationPreviewList__OOMPZ')[0];
     
         referenceNode.parentNode.insertBefore(svgMap, siblingNode);
     
