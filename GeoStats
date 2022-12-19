@@ -1,7 +1,6 @@
 // ==UserScript==
 // @name         Geoguessr GeoStats Script
 // @description  Keeps track of various stats and displays it on an interactive map on your profile (Duels and Classic)
-// @author       nappyslappy
 // @version      2.2.2
 // @match        https://www.geoguessr.com/*
 // @grant        none
