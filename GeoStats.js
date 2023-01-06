@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Geoguessr GeoStats Script
 // @description  Keeps track of various stats and displays it on an interactive map on your profile (Duels and Classic)
-// @version      2.2.2
+// @author       nappyslappy
+// @version      2.2.3
 // @match        https://www.geoguessr.com/*
 // @grant        none
 // @license      none
@@ -11,7 +12,7 @@
 // ==/UserScript==
 
 //Published: June 6th, 2022
-//Last Update: December 10th, 2022
+//Last Update: January 6th, 2023
 
 /******************************** SETUP ********************************/
 /*                                                                     */
@@ -25,7 +26,7 @@
 /*                                                                     */
 /***********************************************************************/
 
-//************************************************************ START OF SCRIPT ************************************************************//
+//************************************************************* START OF SCRIPT *************************************************************//
 
 //GLOBAL VARIABLES
 //Get User ID
@@ -53,8 +54,8 @@ let checkingClassicRoundOver = false;
 let checkingChallengeRoundOver = false;
 
 //Map Colors
-let green_range = 0.75;  
-let yellow_range = 0.25; 
+let green_range = 0.75;
+let yellow_range = 0.25;
 let red_range = 0;
 
 //Set the map color ranges
@@ -150,7 +151,7 @@ function evaluateDuelsGuess(guess,location,distance,userScore,opponentScore,star
     let countryStats = {
         totalCount: 0,
         totalCorrect: 0,
-        averageScore: 0, 
+        averageScore: 0,
         averageDistance: 0,
         closerThanOpponent: 0,
         averageTime: 0,
@@ -176,7 +177,7 @@ function evaluateDuelsGuess(guess,location,distance,userScore,opponentScore,star
         totalSeconds: 0,
 
         //Average
-        averageScore: 0, 
+        averageScore: 0,
         averageDistance: 0,
         averageGameLengthWin: 0,
         averageGameLengthLoss: 0,
@@ -207,7 +208,7 @@ function evaluateDuelsGuess(guess,location,distance,userScore,opponentScore,star
         let time = value.slice(11,19);
         time = time.split(/[.:]/);
         time = (parseInt(time[0]) * 60 * 60) + (parseInt(time[1]) * 60) + parseInt(time[2]);
-        
+
         return time;
     }
 
@@ -256,7 +257,7 @@ function evaluateDuelsGuess(guess,location,distance,userScore,opponentScore,star
         countryStats.total5ks++;
         overallStats.total5ks++;
     }
-    
+
     //Country Streaks (Correct)
     if(guess == location){
         //Country
@@ -396,7 +397,7 @@ function duelsGameFinished(userHealth,opponentHealth,opponentRating,userBefore,u
         overallStats.totalWin++;
         overallStats.averageGameLengthWin = ((overallStats.averageGameLengthWin * (overallStats.totalWin - 1)) + gameLength) / overallStats.totalWin;
     }
-    
+
     //Game Length (Loss)
     if(!win){
         overallStats.totalLoss++;
@@ -426,7 +427,7 @@ function duelsGameFinished(userHealth,opponentHealth,opponentRating,userBefore,u
         else if(!win){
             overallStats.averageRatingChange.loss[0]++;
             overallStats.averageRatingChange.loss[1] = ((overallStats.averageRatingChange.loss[1] * (overallStats.averageRatingChange.loss[0] - 1)) + (userAfter-userBefore)) / overallStats.averageRatingChange.loss[0];
-        }    
+        }
     }
 
     //Save Updated Stats
@@ -599,7 +600,7 @@ async function checkDuelsGuess(api){
                 }
 
                 let current_guess = [out.teams[player_index].players[0].guesses[last_guess_number-1].lat, out.teams[player_index].players[0].guesses[last_guess_number-1].lng];
-                
+
                 //If the player refreshes during the 15 second countdown after making a guess
                 if(current_guess[0] == window.sessionStorage.getItem('last-guess-lat') && current_guess[1] == window.sessionStorage.getItem('last-guess-lng')){
                     return;
@@ -628,7 +629,7 @@ async function checkDuelsGuess(api){
                     let guessTime = out.teams[player_index].players[0].guesses[last_guess_number-1].created;
 
                     let opponentDistance = 'DNF';
-                    let opponentGuess = out.teams[opponent_index].players[0];   
+                    let opponentGuess = out.teams[opponent_index].players[0];
                     if(opponentGuess.guesses[opponentGuess.guesses.length-1] && opponentGuess.guesses[opponentGuess.guesses.length-1].roundNumber == current_round){
                         opponentDistance = opponentGuess.guesses[opponentGuess.guesses.length-1].distance;
                     }
@@ -655,11 +656,11 @@ function evaluateClassicGameFinished(out){
     if(out.mode == 'streak'){
         //Evaluate Country Streaks Game Stats
         if(out.streakType == 'countrystreak'){
-            
+
         }
         //Evaluate USA Streaks Game Stats
         else if(out.streakType == 'usstatestreak'){
-            
+
         }
     }
     //Evaluate Standard Game Stats
@@ -668,7 +669,7 @@ function evaluateClassicGameFinished(out){
         overallStats.totalGames++;
         overallStats.totalSeconds += out.player.totalTime;
         overallStats.averageGameTime = ((overallStats.averageGameTime * (overallStats.totalGames - 1)) + out.player.totalTime) / overallStats.totalGames;
-        
+
         //HIGHSCORE STUFF HERE
 
 
@@ -682,11 +683,11 @@ function evaluateClassicRoundFinished(out){
     if(out.mode == 'streak'){
         //Evaluate Country Streaks Round Stats
         if(out.streakType == 'countrystreak'){
-            
+
         }
         //Evaluate USA Streaks Game Stats
         else if(out.streakType == 'usstatestreak'){
-            
+
         }
     }
     else if(out.mode == 'standard'){
@@ -709,7 +710,7 @@ function evaluateClassicRoundFinished(out){
                     totalCorrect: 0,
                     totalSeconds: 0,
                     total5ks: 0,
-                    
+
                     //Average
                     averageScore: 0,
                     averageDistance: 0,
@@ -741,7 +742,7 @@ function evaluateClassicRoundFinished(out){
                     //Wrong country
                     incorrectCountry: {},
 
-                    //5k locations: 
+                    //5k locations:
                     all5kLocations: [],
 
                     //Streak
@@ -767,7 +768,7 @@ function evaluateClassicRoundFinished(out){
                 //Country Total
                 standardCountryStats.totalCount++;
                 standardOverallStats.totalCount++;
-                
+
                 //Country Correct
                 if(guess == location){
                     //Country
@@ -856,7 +857,7 @@ function addGameId(newId){
     if(!window.localStorage.getItem(`geostats-unfinished-classic-games-${USER_ID}`)){
         window.localStorage.setItem(`geostats-unfinished-classic-games-${USER_ID}`, JSON.stringify({gameIds:[]}));
     }
-    
+
     let allGames = JSON.parse(window.localStorage.getItem(`geostats-unfinished-classic-games-${USER_ID}`));
     if(!allGames.gameIds.includes(newId)){
         allGames.gameIds.push(newId);
@@ -874,7 +875,7 @@ function evaluateChallengeGameFinished(out){
     overallStats.totalGames++;
     overallStats.totalSeconds += out.player.totalTime;
     overallStats.averageGameTime = ((overallStats.averageGameTime * (overallStats.totalGames - 1)) + out.player.totalTime) / overallStats.totalGames;
-    
+
     //HIGHSCORE STUFF HERE
 
 
@@ -907,7 +908,7 @@ function evaluateChallengeRoundFinished(out){
                 totalCorrect: 0,
                 totalSeconds: 0,
                 total5ks: 0,
-                
+
                 //Average
                 averageScore: 0,
                 averageDistance: 0,
@@ -939,7 +940,7 @@ function evaluateChallengeRoundFinished(out){
                 //Wrong country
                 incorrectCountry: {},
 
-                //5k locations: 
+                //5k locations:
                 all5kLocations: [],
 
                 //Streak
@@ -1059,10 +1060,10 @@ function profileCheck(){
             }
         }
         else if(window.localStorage.getItem(`geostats-setup-complete-${USER_ID}`)){
-            if(!window.localStorage.getItem(`geostats-update-2.2.2-complete-${USER_ID}`) && !updateToProfile){
+            if(!window.localStorage.getItem(`geostats-update-2.2.3-complete-${USER_ID}`) && !updateToProfile){
                 addUpdateToProfile();
             }
-            else if(window.localStorage.getItem(`geostats-update-2.2.2-complete-${USER_ID}`) && !statsToProfile){
+            else if(window.localStorage.getItem(`geostats-update-2.2.3-complete-${USER_ID}`) && !statsToProfile){
                 USER_ID = JSON.parse(document.getElementById('__NEXT_DATA__').innerText).props.middlewareResults[0].account.user.userId;
                 addMapToProfile();
             }
@@ -1097,7 +1098,7 @@ function profileCheck(){
 
 //Check if the user is playing a challenge
 function challengeCheck(){
-    if(!location.pathname.startsWith('/challenge/')){ 
+    if(!location.pathname.startsWith('/challenge/')){
         return;
     }
 
@@ -1136,9 +1137,9 @@ function challengeCheck(){
                     }
                 }
                 window.sessionStorage.setItem('last-challenge-guess', JSON.stringify({id: game_tag, round: out.round}));
-                
+
                 evaluateChallengeRoundFinished(out);
-                
+
                 //If Game Is Finished
                 if(out.state == 'finished'){
                     evaluateChallengeGameFinished(out);
@@ -1151,7 +1152,7 @@ function challengeCheck(){
             })
             .catch((error) => {
                 throw error;
-            });   
+            });
         }
     }
     else{
@@ -1164,7 +1165,7 @@ function classicCheck(){
     if(!location.pathname.startsWith('/game/')){
         return;
     }
-    
+
     //If a round has finished
     if(document.getElementsByClassName('result-layout_root__NfX12').length > 0){
         const game_tag = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
@@ -1219,15 +1220,15 @@ function classicCheck(){
     }
 };
 
-//Check if the user is playing a duels game 
+//Check if the user is playing a duels game
 function duelsCheck(){
-    
+
     if(!location.pathname.startsWith('/duels/') || location.pathname.endsWith('/summary')){
         return;
     }
     const game_tag = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
     const api_url = "https://game-server.geoguessr.com/api/duels/"+game_tag;
-    
+
     //If a round has finished
     if(document.getElementsByClassName('overlay_overlay__AR02x').length > 0){
         //If the round is finished
@@ -1273,7 +1274,7 @@ setInterval(challengeCheck,250)
 setInterval(profileCheck,500);
 
 //Console Log Script Name
-console.log('*** Geoguessr GeoStats v2.2.2 by NappySlappy ***');
+console.log('*** Geoguessr GeoStats v2.2.3 by NappySlappy ***');
 
 /************************************************** UPDATE STUFF HERE **************************************************/
 function addFixingToProfile(){
@@ -1410,7 +1411,7 @@ function addUpdateToProfile(){
     htmlForUpdate.innerHTML = `
         <div id='update-page-wrapper'>
             <div id='update-page-title-wrapper'>
-                <h1 id='update-page-title'>GeoStats Update v2.2.2</h1>
+                <h1 id='update-page-title'>GeoStats Update v2.2.3</h1>
             </div>
 
             <div id='update-page-content-wrapper'>
@@ -1433,7 +1434,7 @@ function addUpdateToProfile(){
         function changeSlide(){
             currentSlide++;
             if(currentSlide == allSliders.length){
-                window.localStorage.setItem('geostats-update-2.2.2-complete-${USER_ID}', new Date());
+                window.localStorage.setItem('geostats-update-2.2.3-complete-${USER_ID}', new Date());
                 document.getElementById('geostats-update-css').remove();
                 document.getElementById('geostats-update-html').remove();
             }
@@ -1622,8 +1623,29 @@ function addMapToProfile(){
             font-family: var(--font-neo-sans);
         }
 
+        #geostats-gamemodes-menu{
+            display: flex;
+            margin: 0px 0px;
+            justify-content: center;
+            padding-inline-start: 0;
+        }
+
+        .geostats-gamemodes-menu-item{
+            display: block;
+            padding: 8px;
+            color: var(--ds-color-white-60)
+        }
+
         .geostats-gamemodes-menu-item:hover{
             cursor: pointer;
+        }
+
+        .geostats-gamemodes-menu-item-wrapper{
+
+        }
+
+        ol li::marker{
+            content: "" !important;
         }
 
         #total-percentage-wrapper{
@@ -1742,9 +1764,9 @@ function addMapToProfile(){
             color: #000000;
             cursor: pointer;
         }
-        
+
         #overall-stats-page-wrapper{
-            
+
         }
 
         #overall-stats-display-details{
@@ -1817,7 +1839,7 @@ function addMapToProfile(){
             flex-direction: row;
             flex-wrap: wrap;
         }
-    
+
         .country-stat-wrapper{
             width: 33.333%;
             height: 50%;
@@ -1825,15 +1847,15 @@ function addMapToProfile(){
             display: flex;
             flex-direction: column;
         }
-        
+
         .country-stat-outer-circle{
-            position: relative;       
+            position: relative;
             height: 100px;
             width: 100px;
             border-radius: 50%;
             margin: auto;
         }
-    
+
         .country-stat-inner-circle{
             position: absolute;
             height: 85%;
@@ -1843,7 +1865,7 @@ function addMapToProfile(){
             top: 0; bottom: 0; left: 0; right: 0;
             margin: auto;
         }
-    
+
         .country-stat-value-wrapper{
             display: flex;
             align-items: center;
@@ -1851,17 +1873,17 @@ function addMapToProfile(){
             color: white;
             height: 100%;
         }
-    
+
         .country-stat-value{
             font-size: 25px;
         }
-    
+
         .country-stat-title{
             position: relative;
             color: #ffffff;
             margin: auto;
         }
-    
+
         .country-stat-spacing-wrapper{
             width: 100%;
             height: 25%;
@@ -1931,30 +1953,30 @@ function addMapToProfile(){
         #map-color-ranges-slider-wrapper{
             position: relative;
         }
-    
+
         #slider-output-wrapper{
             position: relative;
             margin-top: 20px;
             width: 100%;
         }
-    
+
         #left-slider-output{
             position: absolute;
             left: 50%;
         }
-    
+
         #right-slider-output{
             position: absolute;
             left: 50%;
         }
-    
+
         #map-color-ranges-slider{
             position: relative;
             width: 100%;
             height: 100px;
             margin-top: 0px;
         }
-    
+
         #slider-track{
             width: 100%;
             height: 5px;
@@ -1964,7 +1986,7 @@ function addMapToProfile(){
             bottom: 0;
             border-radius: 5px;
         }
-    
+
         .map-color-ranges{
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -1980,12 +2002,12 @@ function addMapToProfile(){
             border-color: transparent;
             padding: 0px;
         }
-    
+
         .map-color-ranges::-webkit-slider-runnable-track{
             -webkit-appearance: none;
             height: 5px;
         }
-    
+
         .map-color-ranges::-webkit-slider-thumb{
             -webkit-appearance: none;
             height: 1.7em;
@@ -2136,9 +2158,9 @@ function addMapToProfile(){
             color: white;
             border-color: white;
             cursor: pointer;
-            padding: 5px 10px 5px 10px; 
+            padding: 5px 10px 5px 10px;
         }
-    
+
         .download-upload-buttons:hover{
             background-color: white;
             color: black;
@@ -2237,18 +2259,18 @@ function addMapToProfile(){
         }
     `;
 
-    svgMap.innerHTML = `   
+    svgMap.innerHTML = `
         <div id='map-title'>
             <h2 style="height: 50px">GeoStats</h2>
-            <ol id="geostats-gamemodes-menu" style="display: flex; margin: 10px 0px; justify-content: center;" class="menu_menuItems__MENIh menu_animateVisibility__UheVq">
-                <li class="menu_menuItem__Cn2wB">
+            <ol id="geostats-gamemodes-menu">
+                <li class="geostats-gamemodes-menu-item-wrapper">
                     <div class="menu_menuItemLabel__MQkhr">
                         <div class="label_sizeXSmall__mFnrR">
                             <a class="geostats-gamemodes-menu-item" id="geostats-gamemodes-menu-item-duels">Duels</a>
                         </div>
                     </div>
                 </li>
-                <li class="menu_menuItem__Cn2wB">
+                <li class="geostats-gamemodes-menu-item-wrapper">
                     <div class="menu_menuItemLabel__MQkhr">
                         <div class="label_sizeXSmall__mFnrR">
                             <a class="geostats-gamemodes-menu-item" id="geostats-gamemodes-menu-item-classic">Classic</a>
@@ -2264,7 +2286,7 @@ function addMapToProfile(){
                                 </div>
                             </li>
                 -->
-                    
+
                 <!-- NOT YET
                             <li class="menu_menuItem__Cn2wB">
                                 <div class="menu_menuItemLabel__MQkhr">
@@ -2275,7 +2297,7 @@ function addMapToProfile(){
                             </li>
                 -->
             </ol>
-            
+
             <div id="total-percentage-wrapper">
                 <div id="total-percentage-text-wrapper">
                     <div id="total-percentage-text"></div>
@@ -3167,7 +3189,7 @@ function addMapToProfile(){
 
 
                 <!-- STANDARD STATS -->
-                    <!-- Average Score --> 
+                    <!-- Average Score -->
                     <div id='standard-overall-stat-average-score-wrapper' class='country-stat-wrapper'>
                         <div id='standard-overall-stat-average-score-outer-circle' class='country-stat-outer-circle'>
                             <div id='standard-overall-stat-average-score-inner-circle' class='country-stat-inner-circle'>
@@ -3230,7 +3252,7 @@ function addMapToProfile(){
                         </div>
                         <h4 id='standard-overall-stat-total5ks-title' class='country-stat-title'>Total 5ks</h4>
                     </div>
-                
+
 
             </div>
 
@@ -3282,7 +3304,7 @@ function addMapToProfile(){
                             </div>
                             <h4 id='country-stat-average-score-title' class='country-stat-title'>Average Score</h4>
                         </div>
-                
+
                         <!-- Average Distance -->
                         <div id='country-stat-average-distance-wrapper' class='country-stat-wrapper'>
                             <div id='country-stat-average-distance-outer-circle' class='country-stat-outer-circle'>
@@ -3294,7 +3316,7 @@ function addMapToProfile(){
                             </div>
                             <h4 id='country-stat-average-distance-title' class='country-stat-title'>Average Distance (km)</h4>
                         </div>
-                
+
                         <!-- Closer Than Opponent -->
                         <div id='country-stat-closer-than-opponent-wrapper' class='country-stat-wrapper'>
                             <div id='country-stat-closer-than-opponent-outer-circle' class='country-stat-outer-circle'>
@@ -3310,7 +3332,7 @@ function addMapToProfile(){
                         <!-- Empty Div For Spacing -->
                         <div id='duels-country-stats-spacing-wrapper-1' class='country-stat-spacing-wrapper'>
                         </div>
-                
+
                         <!-- Average Time -->
                         <div id='country-stat-average-time-wrapper' class='country-stat-wrapper'>
                             <div id='country-stat-average-time-outer-circle' class='country-stat-outer-circle'>
@@ -3322,7 +3344,7 @@ function addMapToProfile(){
                             </div>
                             <h4 id='country-stat-average-time-title' class='country-stat-title'>Average Time (sec)</h4>
                         </div>
-                
+
                         <!-- Guessed First -->
                         <div id='country-stat-guessed-first-wrapper' class='country-stat-wrapper'>
                             <div id='country-stat-guessed-first-outer-circle' class='country-stat-outer-circle'>
@@ -3334,7 +3356,7 @@ function addMapToProfile(){
                             </div>
                             <h4 id='country-stat-guessed-first-title' class='country-stat-title'>Guessed First</h4>
                         </div>
-                
+
                         <!-- Total 5ks -->
                         <div id='country-stat-total-5ks-wrapper' class='country-stat-wrapper'>
                             <div id='country-stat-total-5ks-outer-circle' class='country-stat-outer-circle'>
@@ -3359,7 +3381,7 @@ function addMapToProfile(){
                             </div>
                             <h4 id='standard-country-stat-average-score-title' class='country-stat-title'>Average Score</h4>
                         </div>
-                
+
                         <!-- Average Distance -->
                         <div id='standard-country-stat-average-distance-wrapper' class='country-stat-wrapper'>
                             <div id='standard-country-stat-average-distance-outer-circle' class='country-stat-outer-circle'>
@@ -3481,7 +3503,7 @@ function addMapToProfile(){
                             <h5 id='download-file-status'></h5>
                         </div>
                     </div>
-                
+
                     <div id='settings-import-wrapper'>
                         <h2 style='color: var(--ds-color-yellow-50); padding-bottom: 15px'>Upload Stats</h2>
                         <div id='settings-import-content'>
@@ -3491,7 +3513,7 @@ function addMapToProfile(){
                                 </label>
                                 <h5 id='select-file-status'>No File Selected</h5>
                             </div>
-                        
+
                             <div id='upload-file-info-wrapper'>
                                 <button id='upload-file-button' class='download-upload-buttons'>Upload</button>
                                 <h5 id='upload-file-status'></h5>
@@ -3510,10 +3532,10 @@ function addMapToProfile(){
         </div>
 
         <div id='footer-wrapper'>
-            <h5 id='version-number'>Version 2.2.2</h5>
+            <h5 id='version-number'>Version 2.2.3</h5>
             <div id='feedback-link-wrapper'>
                 <h5> Please Leave Some <a href='https://www.reddit.com/r/geoguessr/comments/x1pq5o/geostats_v22/' target='_blank' style='color: white; text-decoration: underline'>Feedback</a> :) </h5>
-            </div>  
+            </div>
             <h5 id='creator-tag'>GeoStats By NappySlappy</h5>
         </div>
     `;
@@ -3637,15 +3659,15 @@ function addMapToProfile(){
 
             //Average Score
             findPercentage(averageScore, 5000);
-            document.getElementById('overall-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-average-score-value').innerText = averageScore;
 
             //Average Distance
             findPercentage(2500-averageDistance, 2500);
-            document.getElementById('overall-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             if(window.localStorage.getItem('units-svg-map') == 'mi'){
                 document.getElementById('overall-stat-average-distance-title').innerText = 'Average Distance (mi)';
-                averageDistance = Math.floor(averageDistance / 1.609);   
+                averageDistance = Math.floor(averageDistance / 1.609);
             }
             else{
                 document.getElementById('overall-stat-average-distance-title').innerText = 'Average Distance (km)';
@@ -3654,37 +3676,37 @@ function addMapToProfile(){
 
             //Closer Than Opponent
             findPercentage(closerThanOpponent, totalCount);
-            document.getElementById('overall-stat-closer-than-opponent-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-closer-than-opponent-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-closer-than-opponent-value').innerText = Math.floor((100 * (closerThanOpponent/totalCount))) + '%';
 
             //Average Time
             findPercentage(120-averageTime, 120);
-            document.getElementById('overall-stat-average-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-average-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-average-time-value').innerText = averageTime;
 
             //Guessed First
             findPercentage(guessedFirst, totalCount);
-            document.getElementById('overall-stat-guessed-first-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-guessed-first-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-guessed-first-value').innerText = Math.floor((100 * (guessedFirst/totalCount))) + '%';
-            
+
             //Total 5ks
             findPercentage(total5ks, 100);
-            document.getElementById('overall-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-total-5ks-value').innerText = total5ks;
 
             //Game Length (Win)
             findPercentage(15-gameLengthWin, 15);
-            document.getElementById('overall-stat-average-game-length-win-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-average-game-length-win-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-average-game-length-win-value').innerText = Math.round(10 * gameLengthWin) / 10;
 
             //Game Length (Loss)
             findPercentage(gameLengthLoss, 15);
-            document.getElementById('overall-stat-average-game-length-loss-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-average-game-length-loss-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-average-game-length-loss-value').innerText = Math.round(10 * gameLengthLoss) / 10;
 
             //Opponent Rating
             findPercentage(opponentRating, 1200);
-            document.getElementById('overall-stat-opponent-rating-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('overall-stat-opponent-rating-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('overall-stat-opponent-rating-value').innerText = opponentRating;
 
             //BOTTOM STATS SETUP
@@ -3759,7 +3781,7 @@ function addMapToProfile(){
             else if(percentage_total >= 100*${red_range}){
                 document.getElementById('total-percentage-bar').style.backgroundColor = 'red';
             }
-            
+
             if(percentage_total != 'none'){
                 document.getElementById('total-percentage-bar').style.width = percentage_total + '%';
                 document.getElementById('total-percentage-text').innerHTML = 'Overall Score: ' + totalCorrect + ' / ' + totalCount + ' (' + percentage_total +'%) ';
@@ -3822,18 +3844,18 @@ function addMapToProfile(){
             let averageRoundTime = Math.floor(overallStats.averageRoundTime);
             let averageGameTime = overallStats.averageGameTime/60;
             let total5ks = overallStats.total5ks;
-            
+
             //Average Score
             findPercentage(averageScore, 5000);
-            document.getElementById('standard-overall-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-overall-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-overall-stat-average-score-value').innerText = averageScore;
 
             //Average Distance
             findPercentage(2500-averageDistance, 2500);
-            document.getElementById('standard-overall-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-overall-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             if(window.localStorage.getItem('units-svg-map') == 'mi'){
                 document.getElementById('standard-overall-stat-average-distance-title').innerText = 'Average Distance (mi)';
-                averageDistance = Math.floor(averageDistance / 1.609);   
+                averageDistance = Math.floor(averageDistance / 1.609);
             }
             else{
                 document.getElementById('standard-overall-stat-average-distance-title').innerText = 'Average Distance (km)';
@@ -3842,26 +3864,26 @@ function addMapToProfile(){
 
             //Average Round Time
             findPercentage(120-averageRoundTime, 120);
-            document.getElementById('standard-overall-stat-average-round-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-overall-stat-average-round-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-overall-stat-average-round-time-value').innerText = averageRoundTime;
 
             //Average Game Time
             findPercentage(10-averageGameTime, 10);
-            document.getElementById('standard-overall-stat-average-game-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-overall-stat-average-game-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-overall-stat-average-game-time-value').innerText = round(averageGameTime,1);
 
             //Total 5ks
             findPercentage(total5ks, 100);
-            document.getElementById('standard-overall-stat-total5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-overall-stat-total5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-overall-stat-total5ks-value').innerText = total5ks;
-            
+
 
             //BOTTOM STATS SETUP
             //Commonly Guessed Incorrectly
             document.getElementById('overall-stats-distance-from-opponent-title').innerText = 'TOP INCORRECT COUNTRIES';
             let textColor = 'green';
             let innerText = '';
-            
+
             if(Object.keys(overallStats.incorrectCountry).length != 0){
                 let incorrectGuesses = Object.entries(overallStats.incorrectCountry).sort((a,b) => b[1]-a[1]);
                 for(let i = 0; i < 3; i++){
@@ -3989,7 +4011,7 @@ function addMapToProfile(){
                 //Change Menu Color
                 menuItemsGray();
                 document.getElementById('geostats-gamemodes-menu-item-classic').style.color = 'white';
-                
+
                 //If country stats are open, change to classic
                 if(document.getElementById('country-stats-page-wrapper').style.display == 'block'){
                     setupCountryStatsClassic('switch', window.localStorage.getItem('select-country-stats-id'));
@@ -4013,7 +4035,7 @@ function addMapToProfile(){
                 document.getElementById('geostats-gamemodes-menu-item-classic').style.color = 'white';
             break;
         }
-        
+
 
         function mouseOverCountry(country){
             if(typeof country.target !== 'undefined'){
@@ -4053,11 +4075,11 @@ function addMapToProfile(){
                     if(window.localStorage.getItem(target + '-number-total-${USER_ID}') !== null){
                         countryTotal = window.localStorage.getItem(target + '-number-total-${USER_ID}');
                     }
-    
+
                     if((countryCorrect !== 0) && (countryTotal !== 0)){
                         countryPercentage = Math.floor(100 * (parseInt(countryCorrect) / parseInt(countryTotal)));
                     }
-    
+
                     if(window.localStorage.getItem(target + '-distance-average-${USER_ID}') !== null){
                         countryDistance = parseInt(window.localStorage.getItem(target + '-distance-average-${USER_ID}')) / 1000;
                         if(document.getElementById('unit-selector-mi').checked){
@@ -4065,7 +4087,7 @@ function addMapToProfile(){
                         }
                         countryDistance = round(countryDistance,1);
                     }
-    
+
                     if(document.getElementById('unit-selector-mi').checked){
                         distanceUnit = 'mi';
                     }
@@ -4084,12 +4106,12 @@ function addMapToProfile(){
                         }
                         countryDistance = round(countryDistance,1);
                     }
-    
+
                     if(document.getElementById('unit-selector-mi').checked){
                         distanceUnit = 'mi';
                     }
                 }
-                
+
 
                 document.getElementById("display-country-details").textContent = countryName + ": " + countryCorrect + " / " + countryTotal + " (" + countryPercentage + "%)";
                 document.getElementById("display-country-details").style.visibility = "visible";
@@ -4258,7 +4280,7 @@ function addMapToProfile(){
                 else if(window.localStorage.getItem('geostats-current-gamemode-${USER_ID}') == 'classic'){
                     resetClassicScores();
                 }
-                
+
                 //Reload the page
                 location.reload();
             }
@@ -4462,15 +4484,15 @@ function addMapToProfile(){
 
             //Average Score
             findPercentage(averageScore, 5000);
-            document.getElementById('country-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('country-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('country-stat-average-score-value').innerText = averageScore;
 
             //Average Distance
             findPercentage(2500-averageDistance, 2500);
-            document.getElementById('country-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';     
+            document.getElementById('country-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             if(window.localStorage.getItem('units-svg-map') == 'mi'){
                 document.getElementById('country-stat-average-distance-title').innerText = 'Average Distance (mi)';
-                averageDistance = Math.floor(averageDistance / 1.609);   
+                averageDistance = Math.floor(averageDistance / 1.609);
             }
             else{
                 document.getElementById('country-stat-average-distance-title').innerText = 'Average Distance (km)';
@@ -4479,22 +4501,22 @@ function addMapToProfile(){
 
             //Closer Than Opponent
             findPercentage(closerThanOpponent, totalCount);
-            document.getElementById('country-stat-closer-than-opponent-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';     
+            document.getElementById('country-stat-closer-than-opponent-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('country-stat-closer-than-opponent-value').innerText = Math.floor((100 * (closerThanOpponent/totalCount))) + '%';
 
             //Average Time
             findPercentage(120-averageTime, 120);
-            document.getElementById('country-stat-average-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';     
+            document.getElementById('country-stat-average-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('country-stat-average-time-value').innerText = averageTime;
 
             //Guessed First
             findPercentage(guessedFirst, totalCount);
-            document.getElementById('country-stat-guessed-first-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';     
+            document.getElementById('country-stat-guessed-first-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('country-stat-guessed-first-value').innerText = Math.floor((100 * (guessedFirst/totalCount))) + '%';
 
             //Total 5ks
             findPercentage(total5ks, 10);
-            document.getElementById('country-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';     
+            document.getElementById('country-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('country-stat-total-5ks-value').innerText = total5ks;
 
             //BOTTOM STATS SETUP
@@ -4525,7 +4547,7 @@ function addMapToProfile(){
             document.getElementById('country-stats-country-streaks-value-max-correct-value').innerText = countryObject.countryCorrectMax;
             document.getElementById('country-stats-country-streaks-value-max-wrong-value').innerText = countryObject.countryWrongMax;
 
-            
+
             //SHOW CORRECT VALUES
             document.getElementById('country-stat-average-score-wrapper').style.display = 'flex';
             document.getElementById('country-stat-average-distance-wrapper').style.display = 'flex';
@@ -4571,18 +4593,18 @@ function addMapToProfile(){
             let averageDistance = Math.floor(overallStats.averageDistance/1000);
             let averageRoundTime = Math.floor(overallStats.averageRoundTime);
             let total5ks = overallStats.total5ks;
-            
+
             //Average Score
             findPercentage(averageScore, 5000);
-            document.getElementById('standard-country-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-country-stat-average-score-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-country-stat-average-score-value').innerText = averageScore;
 
             //Average Distance
             findPercentage(2500-averageDistance, 2500);
-            document.getElementById('standard-country-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-country-stat-average-distance-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             if(window.localStorage.getItem('units-svg-map') == 'mi'){
                 document.getElementById('standard-country-stat-average-distance-title').innerText = 'Average Distance (mi)';
-                averageDistance = Math.floor(averageDistance / 1.609);   
+                averageDistance = Math.floor(averageDistance / 1.609);
             }
             else{
                 document.getElementById('standard-country-stat-average-distance-title').innerText = 'Average Distance (km)';
@@ -4591,21 +4613,21 @@ function addMapToProfile(){
 
             //Average Round Time
             findPercentage(120-averageRoundTime, 120);
-            document.getElementById('standard-country-stat-average-round-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-country-stat-average-round-time-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-country-stat-average-round-time-value').innerText = averageRoundTime;
 
             //Total 5ks
             findPercentage(total5ks, 10);
-            document.getElementById('standard-country-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';       
+            document.getElementById('standard-country-stat-total-5ks-outer-circle').style.background = 'conic-gradient(' + percentageColor + ', ' + percentageColor + ' ' + percentage + '%, #808080 ' + percentage + '%, #808080)';
             document.getElementById('standard-country-stat-total-5ks-value').innerText = total5ks;
-            
+
 
             //BOTTOM STATS SETUP
             //Commonly Guessed Incorrectly
             document.getElementById('country-stats-distance-from-opponent-title').innerText = 'COMMONLY GUESSED INSTEAD';
             let textColor = 'green';
             let innerText = '';
-            
+
             if(Object.keys(overallStats.incorrectCountry).length != 0){
                 let incorrectGuesses = Object.entries(overallStats.incorrectCountry).sort((a,b) => b[1]-a[1]);
                 for(let i = 0; i < 3; i++){
@@ -4693,7 +4715,7 @@ function addMapToProfile(){
 
             //REMOVE FROM OVERALL
             countryCorrect = (parseInt(window.localStorage.getItem('overall-correct-${USER_ID}')) - countryCorrect);
-            countryTotal = (parseInt(window.localStorage.getItem('overall-total-${USER_ID}')) - countryTotal);             
+            countryTotal = (parseInt(window.localStorage.getItem('overall-total-${USER_ID}')) - countryTotal);
 
             //Average Score
             let overallScore = overallStats.averageScore * overallStats.totalCount;
@@ -4930,7 +4952,7 @@ function addMapToProfile(){
                 }
             }
         };
-    
+
         function isJson(string){
             try{
                 JSON.parse(string);
@@ -4940,7 +4962,7 @@ function addMapToProfile(){
             }
             return true;
         };
-    
+
         //DOWNLOAD
         function getFileContent(){
             let downloadData = {
@@ -4949,7 +4971,7 @@ function addMapToProfile(){
                 gameMode: '',
                 userInfo: []
             };
-    
+
             //Get Settings Values
             if(window.localStorage.getItem('units-svg-map')){
                 downloadData.userInfo.push(['units-svg-map', window.localStorage.getItem('units-svg-map')]);
@@ -4960,7 +4982,7 @@ function addMapToProfile(){
             if(window.localStorage.getItem('competitive-only-mode')){
                 downloadData.userInfo.push(['competitive-only-mode', JSON.parse(window.localStorage.getItem('competitive-only-mode'))]);
             }
-    
+
             let baseInfoCount = downloadData.userInfo.length + 4; //+4 is for: "update, setup, left range, right range" in localstorage
 
             let userOption = prompt("Which Stats Would You Like To Download?\\nEnter 'd' for Duels, 'c' for Classic, or 'a' for All");
@@ -4968,7 +4990,7 @@ function addMapToProfile(){
                 case 'd':
                     getAllDuelsStats(downloadData);
                 break;
-                
+
                 case'c':
                     getAllClassicStats(downloadData);
                 break;
@@ -4984,33 +5006,33 @@ function addMapToProfile(){
                 default:
                     return 'INVALID INPUT';
             }
-            
-    
+
+
             //If There Are No Stats To Download
             if(downloadData.userInfo.length <= baseInfoCount){
                 return 'NO EXISTING STATS TO DOWNLOAD';
             }
-    
+
             return JSON.stringify(downloadData);
         };
-        
+
         function makeTextFile(text){
             let data = new Blob([text], {type: 'text/plain'});
-    
+
             if(downloadFile != null){
                 window.URL.revokeObjectURL(downloadFile);
             }
-    
+
             downloadFile = window.URL.createObjectURL(data);
-    
+
             return downloadFile;
         };
-    
+
         function downloadAllStats(e){
             if(!e.isTrusted){
                 return;
             }
-            
+
             let link = document.getElementById('download-link');
             let fileContent = getFileContent();
             if(fileContent == 'NO EXISTING STATS TO DOWNLOAD'){
@@ -5032,7 +5054,7 @@ function addMapToProfile(){
                 document.getElementById('download-file-status').textContent = 'Successfully Downloaded Stats';
             }
         };
-    
+
         //UPLOAD
         function deleteOldStats(gameMode){
             switch(gameMode){
@@ -5055,7 +5077,7 @@ function addMapToProfile(){
                 default:
             }
         };
-    
+
         function addNewStats(){
             uploadFileData.userInfo.forEach((value) => {
                 if(typeof value[1] === 'string'){
@@ -5066,7 +5088,7 @@ function addMapToProfile(){
                 }
             });
         };
-    
+
         function getFileData(event){
             let reader = new FileReader();
             reader.readAsText(event.target.files[0]);
@@ -5076,14 +5098,14 @@ function addMapToProfile(){
                     if(!isJson(event.target.result)){
                         throw "File Content Is Not Json";
                     }
-    
+
                     uploadFileData = JSON.parse(event.target.result);
-    
+
                     //Check if the object is the right one
                     if(uploadFileData.type != 'GeoStats_Object'){
                         throw "File Content Is The Wrong Type";
                     }
-    
+
                     //Check if the file stats have the same user id
                     if(uploadFileData.id != '${USER_ID}'){
                         throw "File Contains Different User Id";
@@ -5094,10 +5116,10 @@ function addMapToProfile(){
                     if(confirm('Are you sure you want to upload new stats? This will erase ' + gameMode + ' exisiting stats.')){
                         //Delete existing stats
                         deleteOldStats(gameMode);
-        
+
                         //Add new stats
                         addNewStats();
-                        
+
                         //If all good
                         document.getElementById('upload-file-status').style.color = 'green';
                         document.getElementById('upload-file-status').textContent = 'Successfully Uploaded New Stats - Reload Page';
@@ -5110,13 +5132,13 @@ function addMapToProfile(){
                 }
             });
         };
-    
+
         function checkFile(event){
             readyToUpload = false;
             uploadData = null;
             document.getElementById('select-file-status').style.color = 'red';
             document.getElementById('select-file-status').textContent = event.target.files[0].name;
-    
+
             //Check if the file is the right type to upload
             if(event.target.files.length != 1){
                 return;
@@ -5124,13 +5146,13 @@ function addMapToProfile(){
             if(event.target.files[0].type != 'text/plain'){
                 return;
             }
-    
+
             //If all good
             readyToUpload = true;
             uploadData = event;
             document.getElementById('select-file-status').style.color = 'green';
         };
-    
+
         //Add Event Listeners For Upload and Download
         document.getElementById('download-file-button').addEventListener('click', downloadAllStats);
         document.getElementById('select-file-button').addEventListener('change', checkFile);
@@ -5142,23 +5164,23 @@ function addMapToProfile(){
                 document.getElementById('upload-file-status').style.color = 'red';
                 document.getElementById('upload-file-status').textContent = 'Please Select A File To Upload';
             }
-        });    
+        });
 
         //PANNING AND ZOOMING ON THE MAP
         let worldMap = document.getElementById('world-map');
         let viewbox = worldMap.viewBox.baseVal;
         let pointerDown = false;
         let mousePoint;
-        
+
         //Return x and y values from pointer event
         function getPointFromEvent(event){
             let point = worldMap.createSVGPoint();
             point.x = event.clientX;
             point.y = event.clientY;
-            
+
             //Get current transformation matrix and inverse it
             let invertedSVGMatrix = worldMap.getScreenCTM().inverse();
-            
+
             return point.matrixTransform(invertedSVGMatrix);
         }
 
@@ -5208,7 +5230,7 @@ function addMapToProfile(){
                     //Make the viewbox smaller
                     viewbox.width /= 1.1;
                     viewbox.height /= 1.1;
-                
+
                     //Position the top left accordingly
                     viewbox.x = (((mousePoint.x - viewbox.x) * viewbox.width) - ((mousePoint.x - viewbox.x) * mousePoint.x) - ((viewbox.x + (viewbox.width * 1.1) - mousePoint.x) * mousePoint.x) ) / ( -((mousePoint.x - viewbox.x) + (viewbox.x + (viewbox.width * 1.1) - mousePoint.x)) );
                     viewbox.y = (((mousePoint.y - viewbox.y) * viewbox.height) - ((mousePoint.y - viewbox.y) * mousePoint.y) - ((viewbox.y + (viewbox.height * 1.1) - mousePoint.y) * mousePoint.y) ) / ( -((mousePoint.y - viewbox.y) + (viewbox.y + (viewbox.height * 1.1) - mousePoint.y)) );
@@ -5247,7 +5269,7 @@ function addMapToProfile(){
             if((viewbox.x + viewbox.width) > 2000){
                 viewbox.x = 2000 - viewbox.width;
             }
-            
+
             //Bottom
             if((viewbox.y + viewbox.height) > 857){
                 viewbox.y = 857 - viewbox.height;
@@ -5257,7 +5279,7 @@ function addMapToProfile(){
         //Add event listeners
         worldMap.addEventListener('pointerdown', onPointerDown);
         worldMap.addEventListener('pointerup', onPointerUp);
-        worldMap.addEventListener('pointerleave', onPointerUp); 
+        worldMap.addEventListener('pointerleave', onPointerUp);
         worldMap.addEventListener('pointermove', onPointerMove);
         worldMap.addEventListener('wheel', onMouseWheel);
 
