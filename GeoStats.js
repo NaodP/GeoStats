@@ -5333,7 +5333,7 @@ function addToggleToStartPage(){
             let currentMapId = window.location.href.replace('https://www.geoguessr.com/maps/', '');
             currentMapId = currentMapId.replace('/play', '');
             let maps = JSON.parse(window.localStorage.getItem('geostats-classic-included-maps-${USER_ID}'));
-            if(toggle.path[0].checked){
+            if(toggle.target.checked){
                 //Add The Map Id
                 if(!maps.ids.includes(currentMapId)){
                     maps.ids.push(currentMapId);
