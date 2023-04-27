@@ -2,7 +2,7 @@
 // @name         Geoguessr GeoStats Script
 // @description  Keeps track of various stats and displays it on an interactive map on your profile (Duels and Classic)
 // @author       nappyslappy
-// @version      2.2.4
+// @version      2.2.5
 // @match        https://www.geoguessr.com/*
 // @grant        none
 // @license      none
@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 //Published: June 6th, 2022
-//Last Update: January 22nd, 2023
+//Last Update: April 27nd, 2023
 
 /******************************** SETUP ********************************/
 /*                                                                     */
@@ -1060,10 +1060,10 @@ function profileCheck(){
             }
         }
         else if(window.localStorage.getItem(`geostats-setup-complete-${USER_ID}`)){
-            if(!window.localStorage.getItem(`geostats-update-2.2.4-complete-${USER_ID}`) && !updateToProfile){
+            if(!window.localStorage.getItem(`geostats-update-2.2.5-complete-${USER_ID}`) && !updateToProfile){
                 addUpdateToProfile();
             }
-            else if(window.localStorage.getItem(`geostats-update-2.2.4-complete-${USER_ID}`) && !statsToProfile){
+            else if(window.localStorage.getItem(`geostats-update-2.2.5-complete-${USER_ID}`) && !statsToProfile){
                 USER_ID = JSON.parse(document.getElementById('__NEXT_DATA__').innerText).props.middlewareResults[1].account.user.userId;
                 addMapToProfile();
             }
@@ -1274,7 +1274,7 @@ setInterval(challengeCheck,250)
 setInterval(profileCheck,500);
 
 //Console Log Script Name
-console.log('*** Geoguessr GeoStats v2.2.4 by NappySlappy ***');
+console.log('*** Geoguessr GeoStats v2.2.5 by NappySlappy ***');
 
 /************************************************** UPDATE STUFF HERE **************************************************/
 function addFixingToProfile(){
@@ -1411,7 +1411,7 @@ function addUpdateToProfile(){
     htmlForUpdate.innerHTML = `
         <div id='update-page-wrapper'>
             <div id='update-page-title-wrapper'>
-                <h1 id='update-page-title'>GeoStats Update v2.2.4</h1>
+                <h1 id='update-page-title'>GeoStats Update v2.2.5</h1>
             </div>
 
             <div id='update-page-content-wrapper'>
@@ -1434,7 +1434,7 @@ function addUpdateToProfile(){
         function changeSlide(){
             currentSlide++;
             if(currentSlide == allSliders.length){
-                window.localStorage.setItem('geostats-update-2.2.4-complete-${USER_ID}', new Date());
+                window.localStorage.setItem('geostats-update-2.2.5-complete-${USER_ID}', new Date());
                 document.getElementById('geostats-update-css').remove();
                 document.getElementById('geostats-update-html').remove();
             }
@@ -3532,7 +3532,7 @@ function addMapToProfile(){
         </div>
 
         <div id='footer-wrapper'>
-            <h5 id='version-number'>Version 2.2.4</h5>
+            <h5 id='version-number'>Version 2.2.5</h5>
             <div id='feedback-link-wrapper'>
                 <h5> Please Leave Some <a href='https://www.reddit.com/r/geoguessr/comments/x1pq5o/geostats_v22/' target='_blank' style='color: white; text-decoration: underline'>Feedback</a> :) </h5>
             </div>
